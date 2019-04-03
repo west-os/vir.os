@@ -2,6 +2,8 @@
 <html>
 <head>
 <script type="text/javascript">
+
+//Clock script:
 function startTime()
 {
 var today=new Date();
@@ -22,6 +24,51 @@ i="0" + i;
 }
 return i;
 }
+
+// Make the DIV element draggable:
+dragElement(document.getElementById("window"));
+
+function dragElement(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (document.getElementById(elmnt.id + "header")) {
+    // if present, the header is where you move the DIV from:
+    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+  } else {
+    // otherwise, move the DIV from anywhere inside the DIV: 
+    elmnt.onmousedown = dragMouseDown;
+  }
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  }
+
+  function closeDragElement() {
+    // stop moving when mouse button is released:
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+
 </script>
 
 <!-- BEGIN CSS -->
@@ -30,6 +77,7 @@ return i;
 body {
 margin:0px;
 padding:0px;
+overflow:hidden;
 }
 
 #viewport {
@@ -70,10 +118,12 @@ color:white;
 
 button.icon {
 margin:5px;
+line-height:1.2;
 }
 
 button.start {
 margin: 0px 5px;
+line-height:1.5;
 }
 
 #taskbar {
@@ -102,6 +152,27 @@ span.sysicon {
 padding:0px 3px;
 }
 
+img.sysicon {
+width:auto;
+height:20px;
+}
+
+#window {
+position:absolute;
+z-index:9;
+background-color:black;
+border:1px solid white;
+text-align:center;
+}
+
+#windowheader {
+padding:10px;
+cursor:move;
+z-index:10;
+background-color:black;
+color:white;
+}
+
 </style>
 </head>
 
@@ -110,17 +181,20 @@ padding:0px 3px;
   <div id="viewport">
     <div id="desktop">
       <div id="icons">
-        <button class="icon">&#x2709;</button>
-        <button class="icon">&#x2604;</button>
-        <button class="icon">&#x266B;</button>
+        <button class="icon">&#x2750;</button>
+        <button class="icon">&#x2756;</button>
+        <button class="icon">&#x266C;</button>
+      </div>
+      <div id="window">
+        <div id="windowheader">Intercross Browser</div>
+        <iframe src="https://www.imgtc.com"></iframe>
       </div>
     </div>
     <div id="taskbar">
       <button class="start">&#x26DB;</button>
       <div id="systray">
-        <span class="sysicon">EN</span>
-        <span class="sysicon">&#x26D7;</span>
-        <span class="sysicon">&#x26E8;</span>
+        <span class="sysicon" style="font-size:14px;">VIR.OS v0.1</span>
+        <img class="sysicon" src="html5logo.png">
         <span class="sysicon" id="time"></span>
       </div>
     </div>
